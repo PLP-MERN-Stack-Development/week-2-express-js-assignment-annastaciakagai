@@ -46,6 +46,123 @@ The API will have the following endpoints:
 - `POST /api/products`: Create a new product
 - `PUT /api/products/:id`: Update a product
 - `DELETE /api/products/:id`: Delete a product
+## Example Requests and Responses
+
+### Get All Products
+
+**Request:**
+
+GET /api/products
+
+
+**Response:**
+json
+[
+  {
+    "id": "1",
+    "name": "Laptop",
+    "description": "High-performance laptop with 16GB RAM",
+    "price": 1200,
+    "category": "electronics",
+    "inStock": true
+  },
+  {
+    "id": "2",
+    "name": "Smartphone",
+    "description": "Latest model with 128GB storage",
+    "price": 800,
+    "category": "electronics",
+    "inStock": true
+  }
+]
+
+
+
+### Get Product by ID
+
+**Request:**
+
+GET /api/products/1
+
+
+**Response:**
+json
+{
+  "id": "1",
+  "name": "Laptop",
+  "description": "High-performance laptop with 16GB RAM",
+  "price": 1200,
+  "category": "electronics",
+  "inStock": true
+}
+
+
+### Create a Product
+
+**Request:**
+
+POST /api/products
+Content-Type: application/json
+
+{
+  "name": "Tablet",
+  "description": "10-inch screen tablet",
+  "price": 300,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+**Response:**
+```json
+{
+  "id": "4",
+  "name": "Tablet",
+  "description": "10-inch screen tablet",
+  "price": 300,
+  "category": "electronics",
+  "inStock": true
+}
+
+
+
+### Update a Product
+
+**Request:**
+```
+PUT /api/products/1
+Content-Type: application/json
+
+{
+  "price": 1100
+}
+```
+
+**Response:**
+```json
+{
+  "id": "1",
+  "name": "Laptop",
+  "description": "High-performance laptop with 16GB RAM",
+  "price": 1100,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+---
+
+### Delete a Product
+
+**Request:**
+```
+DELETE /api/products/1
+```
+
+**Response:**
+```
+204 No Content
+```
 
 ## Submission
 

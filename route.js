@@ -1,4 +1,78 @@
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Get all products
+ *     description: Retrieve a list of all products
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter by category
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by product name
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: A list of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ *                 page:
+ *                   type: integer
+ *                 limit:
+ *                   type: integer
+ *                 products:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       price:
+ *                         type: number
+ *                       category:
+ *                         type: string
+ *                       inStock:
+ *                         type: boolean
+ * /api/products/stats:
+ *   get:
+ *     summary: Get product statistics
+ *     description: Returns the count of products by category
+ *     responses:
+ *       200:
+ *         description: Product statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               additionalProperties:
+ *                 type: integer
+ */
+
 const express = require('express');
+const { parse } = require('uuid');
 const router = express.Router();
 
 let products = [
@@ -30,7 +104,31 @@ let products = [
 
 // - `GET /api/products`: List all products
 router.get('/products', (req, res) => {
-  res.json(products);
+  // res.json(products);
+  let result = products;
+  //filter by category
+  if(req.query.category) {
+    result = result.filter(p => p.category === req.query.category);
+  }
+  //search by name
+  if(req.query.search) {
+    const search =req.query.search.toLowerCase();
+    result = result.filter(p => p.name.toLowerCase(). includes(search));
+  }
+
+  //pagination
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || result.length;
+  const start = (page-1) * limit;
+  const end = start + limit;
+  const paginated = result.slice(start, end);
+
+  res.json({
+    total: result.length,
+    page,
+    limit,
+    products: paginated
+  });
 });
 
 // - `GET /api/products/:id`: Get a specific product by ID
@@ -70,9 +168,21 @@ router.put('/products/:id', (req,res) =>{
 
 // - `DELETE /api/products/:id`: Delete a product
 router.delete('/products/:id', (req,res) => {
-  products =products.filter(u => u.id !== req.params.id);
-  res.status(204).json(products);
+  try {
+    products =products.filter(u => u.id !== req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send(error)
+  }
 })
 
+router.get('/products/stats', (req, res) => {
+  console.log(products)
+  const stats = {};
+  products.forEach(p => {
+    stats[p.category] = (stats[p.category] || 0) + 1;
+  });
+  res.json(stats);
+});
 
 module.exports = router;
