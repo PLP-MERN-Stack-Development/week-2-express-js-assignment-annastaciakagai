@@ -124,7 +124,7 @@ Content-Type: application/json
   "category": "electronics",
   "inStock": true
 }
-
+```
 
 
 ### Update a Product
