@@ -56,7 +56,7 @@ GET /api/products
 
 
 **Response:**
-json
+```json
 [
   {
     "id": "1",
@@ -75,6 +75,7 @@ json
     "inStock": true
   }
 ]
+```
 
 
 
@@ -86,7 +87,7 @@ GET /api/products/1
 
 
 **Response:**
-json
+```json
 {
   "id": "1",
   "name": "Laptop",
@@ -95,12 +96,12 @@ json
   "category": "electronics",
   "inStock": true
 }
-
+```
 
 ### Create a Product
 
 **Request:**
-
+```
 POST /api/products
 Content-Type: application/json
 
